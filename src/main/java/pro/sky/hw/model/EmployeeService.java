@@ -5,6 +5,7 @@ import java.util.Set;
 
 public interface EmployeeService {
 
+
     Employee addEmployee(String firstName, String middleName, String lastName, int department, double salary);
     Employee removeEmployee(String firstName, String middleName, String lastName);
     Employee findEmployee(String firstName, String middleName, String lastName);

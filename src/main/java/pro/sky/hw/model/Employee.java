@@ -7,6 +7,7 @@ public class Employee {
     private final int department;
     private double salary;
 
+
     public Employee(String firstName, String middleName, String lastName, int department, double salary) {
         if(firstName == null || middleName == null || lastName == null || department < 0 || department > 7 || salary < 0){
             throw new IllegalArgumentException("Illegal parameters in Employee class constructor");

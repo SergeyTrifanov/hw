@@ -55,6 +55,7 @@ public class EmployeeController {
         return employeeService.findEmployeeWithMinSalary(departmentId);
     }
 
+
     @GetMapping("/departments/all")
     public Map<Integer, Set<Employee>> departmentEmployeeList(@RequestParam(value = "departmentId", required = false) String departmentId) {
 
