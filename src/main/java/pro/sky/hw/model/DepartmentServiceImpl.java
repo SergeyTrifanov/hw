@@ -1,17 +1,20 @@
 package pro.sky.hw.model;
 
+
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+public class DepartmentServiceImpl implements DepartmentService{
 
-    private Map<String, Employee> eBook;
+    private final Map<String, Employee> eBook;
 
-    public EmployeeServiceImpl() {
+    public DepartmentServiceImpl() {
 
         eBook = new HashMap<>();
 
@@ -36,32 +39,39 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     }
 
-
     @Override
-    public Employee addEmployee(String firstName, String middleName, String lastName, int department, double salary) {
-        Employee e = new Employee(firstName, middleName, lastName, department, salary);
-        String key = e.getFirstName() + e.getMiddleName() + e.getLastName();
-        eBook.put(key, e);
-        return eBook.get(key);
-    }
-
-    @Override
-    public Employee removeEmployee(String firstName, String middleName, String lastName) {
-        String key = firstName + middleName + lastName;
-        return eBook.remove(key);
+    public Employee findEmployeeWithMaxSalary(int department) {
+        return eBook.keySet().stream()
+                .filter(s -> eBook.get(s).getDepartment() == department)
+                .map(eBook::get)
+                .max(Comparator.comparingDouble(Employee::getSalary))
+                .orElseThrow(() -> new RuntimeException("Wrong department number in the " +
+                        "DepartmentService.findEmployeeWithMaxSalary() method argument!"));
     }
 
     @Override
-    public Employee findEmployee(String firstName, String middleName, String lastName) {
-        String key = firstName + middleName + lastName;
-        if(!eBook.containsKey(key)) {
-            throw new RuntimeException("Employee with such firstName, middleName and lastName is not found in the database");
-        } else {
-            return eBook.get(key);
-        }
+    public Employee findEmployeeWithMinSalary(int department) {
+        return eBook.keySet().stream()
+                .filter(s -> eBook.get(s).getDepartment() == department)
+                .map(eBook::get)
+                .min(Comparator.comparingDouble(Employee::getSalary))
+                .orElseThrow(() -> new RuntimeException("Wrong department number in the " +
+                        "DepartmentService.findEmployeeWithMaxSalary() method argument!"));
     }
 
-    public Map<String, Employee> allEmployeeList() {
-        return eBook;
+    @Override
+    public Map<Integer, Set<Employee>> departmentEmployeeList(int department) {
+        return eBook.keySet().stream()
+                .filter(s -> eBook.get(s).getDepartment() == department)
+                .map(eBook::get)
+                .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.toSet()));
     }
+
+    @Override
+    public Map<Integer, Set<Employee>> allDepartmentsEmployeeList() {
+        return eBook.keySet().stream()
+                .map(eBook::get)
+                .collect(Collectors.groupingBy(Employee::getDepartment, Collectors.toSet()));
+    }
+
 }

@@ -5,8 +5,7 @@ public class Employee {
     private final String middleName;
     private final String lastName;
     private final int department;
-    private double salary;
-
+    private final double salary;
 
     public Employee(String firstName, String middleName, String lastName, int department, double salary) {
         if(firstName == null || middleName == null || lastName == null || department < 0 || department > 7 || salary < 0){
